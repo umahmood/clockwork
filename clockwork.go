@@ -272,7 +272,7 @@ func parseSendResponseBody(body string) (SMSResponse, error) {
 				//
 				//      Error <number>: <message>
 				//
-				r := regexp.MustCompile("([0-9])\\w+")
+				r := regexp.MustCompile(matchErrorNumber)
 				i, err := strconv.Atoi(r.FindString(line))
 				if err != nil {
 					return nil, err
@@ -284,8 +284,8 @@ func parseSendResponseBody(body string) (SMSResponse, error) {
 			//
 			//      To: <number> ID: <id>
 			//
-			extractTo := regexp.MustCompile("(To: [0-9])\\w+")
-			extractID := regexp.MustCompile("(ID: [A-Z0-9])\\w+")
+			extractTo := regexp.MustCompile(matchTo)
+			extractID := regexp.MustCompile(matchID)
 
 			to := strings.Split(extractTo.FindString(line), " ")[1]
 			id := strings.Split(extractID.FindString(line), " ")[1]
@@ -312,7 +312,7 @@ func parseCreditResponseBody(body string) (float64, string, error) {
 		//
 		//	Error 58: Invalid API Key
 		//
-		r := regexp.MustCompile("([0-9])\\w+")
+		r := regexp.MustCompile(matchErrorNumber)
 		n := r.FindString(body)
 		i, err := strconv.Atoi(n)
 		if err != nil {
@@ -325,8 +325,8 @@ func parseCreditResponseBody(body string) (float64, string, error) {
 	//	Balance: 287.58 (GBP)
 	//
 	// extract amount 287.58 and currency code GBP
-	extractAmount := regexp.MustCompile("[-+]?([0-9]*\\.[0-9]+|[0-9]+)")
-	extractCurrencyCode := regexp.MustCompile("([A-Z]{2})\\w+")
+	extractAmount := regexp.MustCompile(matchCurrency)
+	extractCurrencyCode := regexp.MustCompile(matchCurrencyCode)
 	a := extractAmount.FindString(body)
 	c := extractCurrencyCode.FindString(body)
 	s, err := strconv.ParseFloat(a, 64)
