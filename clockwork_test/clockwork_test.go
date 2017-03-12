@@ -1,6 +1,7 @@
 package clockwork_test
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -250,5 +251,72 @@ func TestCreditError(t *testing.T) {
 
 	if gotError != wantError {
 		t.Errorf("Fail: error got %v want %v", gotError, wantError)
+	}
+}
+
+// TestDeliveryReceipts
+func TestDeliveryReceipts(t *testing.T) {
+	onDeliveryReceipt := func(got clockwork.Receipt) {
+		var wantID = "LA_424242"
+		var wantTo = "441234567890"
+
+		var wantStatus = clockwork.Delivered
+		var wantErr error
+
+		if got.ID != wantID {
+			t.Errorf("Fail: id - got %s want %s", got.ID, wantID)
+		}
+
+		if got.To != wantTo {
+			t.Errorf("Fail: to - got %s want %s", got.To, wantTo)
+		}
+
+		if got.Status != wantStatus {
+			t.Errorf("Fail: status - got %v want %v", got.Status, wantStatus)
+		}
+
+		if got.Err != wantErr {
+			t.Errorf("Fail: err - got %v want %v", got.Err, wantErr)
+		}
+	}
+
+	testPath := "/receipts"
+	testPort := 9090
+	testQueryParams := "msg_id=LA_424242&status=DELIVRD&detail=0&to=441234567890"
+
+	testURL := fmt.Sprintf("http://localhost:%d%s?%s", testPort, testPath, testQueryParams)
+
+	go func() {
+		clockwork.DeliveryReceiptListen(&clockwork.ReceiptHandler{
+			Path:     testPath,
+			Port:     testPort,
+			Callback: onDeliveryReceipt,
+		})
+	}()
+
+	testCases := []struct {
+		method string
+		url    string
+		buf    *bytes.Buffer
+	}{
+		{
+			method: "GET",
+			url:    testURL,
+			buf:    bytes.NewBufferString(""),
+		},
+		{
+			method: "POST",
+			url:    testURL,
+			buf:    bytes.NewBufferString(testQueryParams),
+		},
+	}
+
+	for _, tc := range testCases {
+		req, err := http.NewRequest(tc.method, tc.url, tc.buf)
+		if err != nil {
+			t.Errorf("Fail: err %v", err)
+		}
+		client := &http.Client{}
+		client.Do(req)
 	}
 }
