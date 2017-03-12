@@ -45,6 +45,36 @@ func main() {
 }
 ```
 
+Delivery receipts let you know whether a message has been delivered:
+```
+package main
+
+import (
+    "fmt"
+
+    "github.com/umahmood/clockwork"
+)
+
+func OnDeliveryReceipt(r clockwork.Receipt) {
+    if r.Err != nil {
+        //...
+    }
+    fmt.Println("ID", r.ID, "Status", r.Status, "To", r.To)
+}
+
+func main() {
+    clockwork.DeliveryReceiptListen(&clockwork.ReceiptHandler{
+        Path:     "/recv_sms",
+        Port:     9090,
+        Callback: OnDeliveryReceipt,
+    })
+}
+```
+Output:
+```
+ID LA_422342 Status Enroute To 441234567890
+```
+
 # Documentation
 
 > http://godoc.org/github.com/umahmood/clockwork
