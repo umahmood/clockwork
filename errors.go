@@ -2,6 +2,36 @@ package clockwork
 
 import "errors"
 
+// Errors related to delivery receipts. // Check the following link for more
+// information:
+// https://www.clockworksms.com/doc/reference/faqs/delivery-states/
+
+var (
+	// ErrNoNetworkDetails no details provided by network
+	ErrNoNetworkDetails = errors.New("clockwork: no details provided by network")
+
+	// ErrMessageDetailsWrong message details wrong
+	ErrMessageDetailsWrong = errors.New("clockwork: message details wrong")
+
+	// ErrPermOperator permanent operator error
+	ErrPermOperator = errors.New("clockwork: operator error - permanent")
+
+	// ErrTempOperator temporary operator error
+	ErrTempOperator = errors.New("clockwork: operator error - temporary")
+
+	// ErrPermAbsentSub permanent agent subscriber error
+	ErrPermAbsentSub = errors.New("clockwork: absent subscriber - permanent")
+
+	// ErrTempAbsentSub temporary agent subscriber error
+	ErrTempAbsentSub = errors.New("clockwork: absent subscriber - temporary")
+
+	// ErrPermPhone permanent phone related error
+	ErrPermPhone = errors.New("clockwork: phone related error - permanent")
+
+	// ErrTempPhone temporary phone related error
+	ErrTempPhone = errors.New("clockwork: phone related error - temporary")
+)
+
 // You might get one of the following errors back when making a call to the API.
 // Check the following link for more information:
 // https://www.clockworksms.com/doc/reference/faqs/api-error-codes/
