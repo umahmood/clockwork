@@ -72,7 +72,7 @@ func main() {
 ```
 Output:
 ```
-ID LA_422342 Status Enroute To 441234567890
+ID LA_422342 Status Enroute To 441234567890 Time 2017-03-17 17:21:27.667238018 +0000 UTC
 ```
 
 # Documentation
