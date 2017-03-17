@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/umahmood/clockwork"
 )
@@ -259,8 +260,8 @@ func TestDeliveryReceipts(t *testing.T) {
 	onDeliveryReceipt := func(got clockwork.Receipt) {
 		var wantID = "LA_424242"
 		var wantTo = "441234567890"
-
 		var wantStatus = clockwork.Delivered
+		var wantTime = time.Now().UTC()
 		var wantErr error
 
 		if got.ID != wantID {
@@ -273,6 +274,10 @@ func TestDeliveryReceipts(t *testing.T) {
 
 		if got.Status != wantStatus {
 			t.Errorf("Fail: status - got %v want %v", got.Status, wantStatus)
+		}
+
+		if got.Time.Year() != wantTime.Year() || got.Time.Month() != wantTime.Month() || got.Time.Day() != wantTime.Day() {
+			t.Errorf("Fail: time - got %v want %v", got.Time, wantTime)
 		}
 
 		if got.Err != wantErr {
