@@ -59,12 +59,12 @@ func OnDeliveryReceipt(r clockwork.Receipt) {
     if r.Err != nil {
         //...
     }
-    fmt.Println("ID", r.ID, "Status", r.Status, "To", r.To)
+    fmt.Println("ID", r.ID, "Status", r.Status, "To", r.To, "Time", r.Time)
 }
 
 func main() {
     clockwork.DeliveryReceiptListen(&clockwork.ReceiptHandler{
-        Path:     "/recv_sms",
+        Path:     "/receipts",
         Port:     9090,
         Callback: OnDeliveryReceipt,
     })
