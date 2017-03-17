@@ -5,7 +5,7 @@ import "fmt"
 // Semantic versioning - http://semver.org/
 const (
 	Major = 1
-	Minor = 1
+	Minor = 2
 	Patch = 1
 )
 
