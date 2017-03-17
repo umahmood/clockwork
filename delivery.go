@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 // DeliveryState status of a message
@@ -66,6 +67,7 @@ type Receipt struct {
 	ID     string
 	To     string
 	Status DeliveryState
+	Time   time.Time
 	Err    error
 }
 
@@ -125,6 +127,8 @@ func (rc *ReceiptHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if v, ok := vals["detail"]; ok {
 		receipt.Err = errorFromDetailCode(v[0])
 	}
+
+	receipt.Time = time.Now().UTC()
 
 	// invoke callback
 	rc.Callback(receipt)
